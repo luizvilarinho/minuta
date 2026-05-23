@@ -70,18 +70,23 @@ export function FileUpload({
   return (
     <div
       onClick={isLoading ? undefined : handleClick}
-      className={`w-full max-w-2xl border-2 border-dashed rounded-lg p-10 flex flex-col items-center justify-center gap-3 transition-colors ${
+      className={`w-full border-2 border-dashed rounded-xl py-10 px-6 flex flex-col items-center justify-center gap-4 transition-all ${
         isLoading
-          ? "border-[#333] cursor-not-allowed opacity-50"
-          : "border-[#444] hover:border-blue-500 cursor-pointer"
+          ? "border-[#2d2650] cursor-not-allowed opacity-50"
+          : "border-[#423b6e] hover:border-violet-500 hover:bg-violet-500/5 cursor-pointer"
       }`}
     >
-      <span className="text-3xl text-gray-500">↑</span>
-      <p className="text-gray-400 text-sm text-center">
-        Arraste um arquivo MP4 ou transcrição (TXT, MD)
-        <br />
-        <span className="text-gray-600 text-xs">Clique para selecionar</span>
-      </p>
+      <div className="w-10 h-10 rounded-full bg-[#1d1833] border border-[#2d2650] flex items-center justify-center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-violet-400">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <div className="text-center">
+        <p className="text-sm text-gray-300 font-medium">Carregar arquivo</p>
+        <p className="text-xs text-gray-500 mt-1">MP4, TXT ou MD — clique para selecionar</p>
+      </div>
     </div>
   );
 }

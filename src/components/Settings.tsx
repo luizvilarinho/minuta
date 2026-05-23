@@ -35,20 +35,27 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-[#1a1a1a] border border-[#333] rounded-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-white text-lg font-semibold">Configurações</h2>
+    <div className="fixed inset-0 bg-[#0e0a1a]/80 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div className="bg-[#18142b] border border-[#2d2650] rounded-2xl p-8 w-full max-w-md shadow-2xl shadow-black/50">
+
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-3">
+            <span className="text-violet-400">◈</span>
+            <h2 className="text-white text-base font-semibold">Configurações</h2>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-[#2d2650] transition-colors"
           >
-            ✕
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
           </button>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-300 text-sm mb-2">
+        <div className="flex flex-col gap-2 mb-6">
+          <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">
             Chave OpenRouter
           </label>
           <input
@@ -56,22 +63,28 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="sk-or-..."
-            className="w-full bg-[#0f0f0f] border border-[#444] text-white rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+            className="w-full bg-[#0e0a1a] border border-[#423b6e] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-violet-500 transition-colors font-mono"
           />
+          <p className="text-xs text-gray-500">Sua chave é salva localmente e nunca enviada ao servidor.</p>
         </div>
 
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded px-4 py-2 text-sm font-medium transition-colors"
+          className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-colors flex items-center justify-center gap-2"
         >
-          {isSaving ? "Salvando..." : "Salvar"}
+          {isSaving && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+          {isSaving ? "Salvando…" : "Salvar chave"}
         </button>
 
         {feedback && (
-          <p className={`mt-3 text-sm ${feedback.type === "success" ? "text-green-400" : "text-red-400"}`}>
+          <div className={`mt-4 text-sm px-4 py-3 rounded-lg ${
+            feedback.type === "success"
+              ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
+              : "text-red-400 bg-red-500/10 border border-red-500/20"
+          }`}>
             {feedback.message}
-          </p>
+          </div>
         )}
       </div>
     </div>

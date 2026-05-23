@@ -21,9 +21,9 @@ export function ModelSelector({
 }: ModelSelectorProps) {
   if (noKeyMessage) {
     return (
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-gray-400">{label}</label>
-        <div className="bg-[#1a1a1a] border border-[#333] rounded px-3 py-2 text-xs text-yellow-400">
+      <div className="flex flex-col gap-2">
+        <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">{label}</label>
+        <div className="bg-[#18142b] border border-yellow-500/30 rounded-lg px-4 py-2.5 text-xs text-yellow-400">
           {noKeyMessage}
         </div>
       </div>
@@ -31,13 +31,13 @@ export function ModelSelector({
   }
 
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-xs text-gray-400">{label}</label>
+    <div className="flex flex-col gap-2">
+      <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">{label}</label>
       <select
         value={selected ?? ""}
         onChange={(e) => onChange(e.target.value)}
         disabled={isLoading || disabled}
-        className="bg-[#1a1a1a] border border-[#333] text-white rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 disabled:opacity-50"
+        className="bg-[#18142b] border border-[#2d2650] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-violet-500 disabled:opacity-50 transition-colors"
       >
         {isLoading ? (
           <option value="">Carregando modelos...</option>
