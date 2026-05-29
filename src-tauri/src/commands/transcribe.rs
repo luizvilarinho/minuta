@@ -61,11 +61,7 @@ enum TranscribeError {
 
 // Localiza o executável do ffmpeg: PATH primeiro, depois localizações conhecidas
 pub(crate) fn find_ffmpeg() -> Result<String, String> {
-    if silent_command("ffmpeg")
-        .arg("-version")
-        .output()
-        .is_ok()
-    {
+    if silent_command("ffmpeg").arg("-version").output().is_ok() {
         return Ok("ffmpeg".to_string());
     }
 
@@ -100,11 +96,15 @@ pub(crate) fn find_ffmpeg() -> Result<String, String> {
 fn extract_to_mp3(ffmpeg: &str, input_path: &str, output_path: &Path) -> Result<(), String> {
     let result = silent_command(ffmpeg)
         .args([
-            "-i", input_path,
+            "-i",
+            input_path,
             "-vn",
-            "-ar", "16000",
-            "-ac", "1",
-            "-b:a", "64k",
+            "-ar",
+            "16000",
+            "-ac",
+            "1",
+            "-b:a",
+            "64k",
             output_path.to_str().unwrap(),
             "-y",
         ])
@@ -126,11 +126,16 @@ fn split_into_chunks(ffmpeg: &str, mp3_path: &Path, id: u128) -> Result<Vec<Path
 
     let result = silent_command(ffmpeg)
         .args([
-            "-i", mp3_path.to_str().unwrap(),
-            "-f", "segment",
-            "-segment_time", "1200",
-            "-c:a", "libmp3lame",
-            "-b:a", "64k",
+            "-i",
+            mp3_path.to_str().unwrap(),
+            "-f",
+            "segment",
+            "-segment_time",
+            "1200",
+            "-c:a",
+            "libmp3lame",
+            "-b:a",
+            "64k",
             pattern.to_str().unwrap(),
             "-y",
         ])
@@ -305,16 +310,12 @@ fn get_api_key(app: &AppHandle) -> Result<String, String> {
         .ok_or_else(|| "Configure sua chave OpenRouter antes de transcrever".to_string())
 }
 
-#[tauri::command]
-pub async fn transcribe_audio(
-    file_path: String,
-    model: String,
-    app: AppHandle,
-    state: State<'_, TranscribeState>,
-) -> Result<String, String> {
-    let key = get_api_key(&app)?;
-
-    let src = Path::new(&file_path);
+// Etapas compartilhadas do pipeline: valida tamanho, extrai para MP3 e divide em chunks
+// se necessário. Retorna o id da sessão e a lista de chunks. Em caso de erro, limpa os
+// temporários da sessão antes de retornar. NÃO transcreve nem trata resume — isso fica
+// a cargo do chamador (transcribe_path limpa sempre; transcribe_audio preserva p/ resume).
+fn prepare_chunks(file_path: &str) -> Result<(u128, Vec<PathBuf>), String> {
+    let src = Path::new(file_path);
     if std::fs::metadata(src).map(|m| m.len()).unwrap_or(0) > 500 * 1024 * 1024 {
         return Err("Arquivo muito grande. O limite é 500MB".to_string());
     }
@@ -324,7 +325,7 @@ pub async fn transcribe_audio(
     let mp3_path = std::env::temp_dir().join(format!("minuta_{}.mp3", id));
 
     // Passo 1: extrair áudio
-    if let Err(e) = extract_to_mp3(&ffmpeg, &file_path, &mp3_path) {
+    if let Err(e) = extract_to_mp3(&ffmpeg, file_path, &mp3_path) {
         cleanup_session(id);
         return Err(e);
     }
@@ -343,6 +344,39 @@ pub async fn transcribe_audio(
             }
         }
     };
+
+    Ok((id, chunks))
+}
+
+// Pipeline de transcrição reutilizável: recebe o caminho de um arquivo de áudio/vídeo
+// e retorna o texto transcrito. Faz extração para MP3, divide em chunks se necessário
+// e transcreve via OpenRouter (com retry por chunk). Limpa os temporários da sessão
+// tanto em sucesso quanto em erro — não habilita resume (uso por fluxos sem UI de retry,
+// como o download do YouTube).
+pub(crate) async fn transcribe_path(
+    app: &AppHandle,
+    file_path: &str,
+    model: &str,
+) -> Result<String, String> {
+    let key = get_api_key(app)?;
+
+    let (id, chunks) = prepare_chunks(file_path)?;
+
+    let result = transcribe_chunks(&chunks, id, model, &key).await;
+    cleanup_session(id);
+    result.map(|texts| texts.join("\n\n"))
+}
+
+#[tauri::command]
+pub async fn transcribe_audio(
+    file_path: String,
+    model: String,
+    app: AppHandle,
+    state: State<'_, TranscribeState>,
+) -> Result<String, String> {
+    let key = get_api_key(&app)?;
+
+    let (id, chunks) = prepare_chunks(&file_path)?;
 
     let total_chunks = chunks.len() as u32;
 

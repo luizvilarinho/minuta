@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Minuta",
+  "productName": "Volp",
   "version": "0.1.0",
   "identifier": "com.minuta.app",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Minuta",
+        "title": "Volp",
         "width": 1000,
         "height": 700,
         "resizable": true,
@@ -27,6 +27,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "externalBin": ["binaries/yt-dlp"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

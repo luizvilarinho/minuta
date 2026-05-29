@@ -30,10 +30,7 @@ struct StreamConfig {
     path: PathBuf,
 }
 
-fn capture_stream(
-    config: StreamConfig,
-    stop_flag: Arc<AtomicBool>,
-) -> Result<(), String> {
+fn capture_stream(config: StreamConfig, stop_flag: Arc<AtomicBool>) -> Result<(), String> {
     wasapi::initialize_mta()
         .ok()
         .map_err(|e| format!("Falha ao inicializar COM: {:?}", e))?;

@@ -17,7 +17,7 @@ export function SaveButton({ transcription, summary, disabled }: SaveButtonProps
     const selected = await open({
       directory: true,
       multiple: false,
-      title: "Escolha onde salvar a reunião",
+      title: "Choose where to save",
     });
 
     if (!selected) return;
@@ -63,7 +63,7 @@ export function SaveButton({ transcription, summary, disabled }: SaveButtonProps
             <polyline points="7 3 7 8 15 8"/>
           </svg>
         )}
-        {status === "saving" ? "Salvando…" : "Salvar Reunião"}
+        {status === "saving" ? "Saving…" : "Save"}
       </button>
 
       {status === "success" && (
@@ -80,7 +80,7 @@ export function SaveButton({ transcription, summary, disabled }: SaveButtonProps
             onClick={handleOpenFolder}
             className="text-xs text-violet-400 hover:text-violet-300 underline whitespace-nowrap shrink-0 transition-colors"
           >
-            Abrir pasta
+            Open folder
           </button>
         </div>
       )}

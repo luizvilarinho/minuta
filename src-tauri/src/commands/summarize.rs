@@ -65,7 +65,9 @@ pub async fn generate_summary(
         .next()
         .map(|c| c.message.content)
         .filter(|s| !s.trim().is_empty())
-        .ok_or_else(|| "O modelo não retornou conteúdo. Tente novamente ou escolha outro modelo".to_string())?;
+        .ok_or_else(|| {
+            "O modelo não retornou conteúdo. Tente novamente ou escolha outro modelo".to_string()
+        })?;
 
     Ok(content)
 }

@@ -4,14 +4,15 @@ use std::sync::atomic::Ordering;
 use tauri::Manager;
 
 use commands::models::{fetch_models, fetch_transcription_models};
+use commands::record::{start_recording, stop_recording, RecordingState};
+use commands::save_files::{open_folder, save_meeting};
 use commands::settings::{get_api_key, save_api_key};
+use commands::summarize::generate_summary;
 use commands::transcribe::{
     clear_resume_state, has_resume_state, resume_last_transcription, transcribe_audio,
     TranscribeState,
 };
-use commands::summarize::generate_summary;
-use commands::save_files::{open_folder, save_meeting};
-use commands::record::{start_recording, stop_recording, RecordingState};
+use commands::youtube::fetch_youtube_transcript;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -35,6 +36,7 @@ pub fn run() {
             open_folder,
             start_recording,
             stop_recording,
+            fetch_youtube_transcript,
         ])
         .on_window_event(|window, event| {
             if let tauri::WindowEvent::CloseRequested { .. } = event {

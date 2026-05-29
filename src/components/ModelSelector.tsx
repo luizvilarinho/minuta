@@ -40,10 +40,10 @@ export function ModelSelector({
         className="bg-[#18142b] border border-[#2d2650] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-violet-500 disabled:opacity-50 transition-colors"
       >
         {isLoading ? (
-          <option value="">Carregando modelos...</option>
+          <option value="">Loading models...</option>
         ) : (
           <>
-            <option value="">Selecione um modelo...</option>
+            <option value="">Select a model...</option>
             {models.map((model) => (
               <option key={model.id} value={model.id}>
                 {model.name}
@@ -53,7 +53,7 @@ export function ModelSelector({
         )}
       </select>
       {!isLoading && models.length === 0 && (
-        <span className="text-xs text-gray-500">Nenhum modelo disponível</span>
+        <span className="text-xs text-gray-500">No models available</span>
       )}
     </div>
   );

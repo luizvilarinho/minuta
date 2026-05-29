@@ -10,12 +10,9 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
   const [apiKey, setApiKey] = useState("");
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-
   useEffect(() => {
     if (isOpen) {
-      invoke<string | null>("get_api_key").then((key) => {
-        if (key) setApiKey(key);
-      });
+      invoke<string | null>("get_api_key").then((key) => { if (key) setApiKey(key); });
     }
   }, [isOpen]);
 
@@ -24,7 +21,7 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
     setFeedback(null);
     try {
       await invoke("save_api_key", { key: apiKey });
-      setFeedback({ type: "success", message: "Chave salva com sucesso" });
+      setFeedback({ type: "success", message: "Key saved successfully" });
     } catch (err) {
       setFeedback({ type: "error", message: String(err) });
     } finally {
@@ -41,7 +38,7 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-3">
             <span className="text-violet-400">◈</span>
-            <h2 className="text-white text-base font-semibold">Configurações</h2>
+            <h2 className="text-white text-base font-semibold">Settings</h2>
           </div>
           <button
             onClick={onClose}
@@ -56,7 +53,7 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
 
         <div className="flex flex-col gap-2 mb-6">
           <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-            Chave OpenRouter
+            OpenRouter API Key
           </label>
           <input
             type="password"
@@ -65,7 +62,7 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
             placeholder="sk-or-..."
             className="w-full bg-[#0e0a1a] border border-[#423b6e] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-violet-500 transition-colors font-mono"
           />
-          <p className="text-xs text-gray-500">Sua chave é salva localmente e nunca enviada ao servidor.</p>
+          <p className="text-xs text-gray-500">Your key is saved locally and never sent to any server.</p>
         </div>
 
         <button
@@ -74,7 +71,7 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
           className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-colors flex items-center justify-center gap-2"
         >
           {isSaving && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-          {isSaving ? "Salvando…" : "Salvar chave"}
+          {isSaving ? "Saving…" : "Save key"}
         </button>
 
         {feedback && (

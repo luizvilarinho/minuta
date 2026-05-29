@@ -23,8 +23,8 @@ export function FileUpload({
     const selected = await open({
       multiple: false,
       filters: [
-        { name: "Vídeo", extensions: ["mp4"] },
-        { name: "Transcrição", extensions: ["txt", "md"] },
+        { name: "Video", extensions: ["mp4"] },
+        { name: "Transcript", extensions: ["txt", "md"] },
       ],
     });
 
@@ -34,7 +34,7 @@ export function FileUpload({
 
     if (ext === "mp4") {
       if (!selectedTranscriptionModel) {
-        onTranscriptionError("Selecione um modelo de transcrição");
+        onTranscriptionError("Select a transcription model");
         return;
       }
       try {
@@ -84,8 +84,8 @@ export function FileUpload({
         </svg>
       </div>
       <div className="text-center">
-        <p className="text-sm text-gray-300 font-medium">Carregar arquivo</p>
-        <p className="text-xs text-gray-500 mt-1">MP4, TXT ou MD — clique para selecionar</p>
+        <p className="text-sm text-gray-300 font-medium">Load file</p>
+        <p className="text-xs text-gray-500 mt-1">MP4, TXT or MD — click to select</p>
       </div>
     </div>
   );

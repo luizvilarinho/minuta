@@ -67,7 +67,11 @@ fn get_api_key_from_store(app: &AppHandle) -> Result<String, String> {
 #[tauri::command]
 pub async fn fetch_models(app: AppHandle) -> Result<Vec<OpenRouterModel>, String> {
     let key = get_api_key_from_store(&app)?;
-    fetch_models_from_url("https://openrouter.ai/api/v1/models?output_modalities=text", &key).await
+    fetch_models_from_url(
+        "https://openrouter.ai/api/v1/models?output_modalities=text",
+        &key,
+    )
+    .await
 }
 
 // Retorna apenas modelos de transcrição de áudio

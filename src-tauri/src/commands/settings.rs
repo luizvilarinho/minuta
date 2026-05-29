@@ -15,7 +15,8 @@ pub async fn save_api_key(key: String, app: AppHandle) -> Result<(), String> {
 #[tauri::command]
 pub async fn get_api_key(app: AppHandle) -> Result<Option<String>, String> {
     let store = app.store(STORE_FILE).map_err(|e| e.to_string())?;
-    let key = store.get(API_KEY_KEY)
+    let key = store
+        .get(API_KEY_KEY)
         .and_then(|v| v.as_str().map(|s| s.to_string()));
     Ok(key)
 }
