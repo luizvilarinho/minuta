@@ -12,6 +12,7 @@ use commands::transcribe::{
     clear_resume_state, has_resume_state, resume_last_transcription, transcribe_audio,
     TranscribeState,
 };
+use commands::webpage::fetch_webpage_text;
 use commands::youtube::fetch_youtube_transcript;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -37,6 +38,7 @@ pub fn run() {
             start_recording,
             stop_recording,
             fetch_youtube_transcript,
+            fetch_webpage_text,
         ])
         .on_window_event(|window, event| {
             if let tauri::WindowEvent::CloseRequested { .. } = event {

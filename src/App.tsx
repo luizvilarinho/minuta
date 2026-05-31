@@ -8,6 +8,7 @@ import { SummaryControls } from "./components/SummaryControls";
 import { SummaryReadView } from "./components/SummaryReadView";
 import { SaveButton } from "./components/SaveButton";
 import { YoutubeUrlInput } from "./components/YoutubeUrlInput";
+import { WebUrlInput } from "./components/WebUrlInput";
 import { useOpenRouter } from "./hooks/useOpenRouter";
 
 function formatDuration(seconds: number): string {
@@ -26,7 +27,7 @@ function App() {
   );
   const [transcription, setTranscription] = useState<string>("");
   const [pastedText, setPastedText] = useState<string>("");
-  const [inputMode, setInputMode] = useState<"upload" | "paste" | "record" | "youtube">("upload");
+  const [inputMode, setInputMode] = useState<"upload" | "paste" | "record" | "youtube" | "webpage">("upload");
   const [contentTab, setContentTab] = useState<"transcription" | "summary">("transcription");
   const [summary, setSummary] = useState<string>("");
   const [isSummaryLoading, setIsSummaryLoading] = useState(false);
@@ -183,7 +184,7 @@ function App() {
       </header>
 
       {/* ── Corpo: 2 colunas (empilha abaixo de xl) ─────────────── */}
-      <main className="flex-1 grid grid-cols-1 xl:grid-cols-[280px_1fr]">
+      <main className="flex-1 grid grid-cols-1 xl:grid-cols-[380px_1fr]">
 
         {/* Col 1 — Input (sidebar) */}
         <div className="flex flex-col border-b border-[#1f1a36] xl:border-b-0 xl:border-r">
@@ -214,12 +215,13 @@ function App() {
             )}
 
             {/* Seletor de modo */}
-            <div className="grid grid-cols-4 gap-1 p-1 rounded-lg bg-[#100c24] border border-[#2d2650]">
+            <div className="grid grid-cols-5 gap-1 p-1 rounded-lg bg-[#100c24] border border-[#2d2650]">
               {([
                 { key: "upload", label: "Upload" },
                 { key: "paste", label: "Paste" },
                 { key: "record", label: "Record" },
                 { key: "youtube", label: "YouTube" },
+                { key: "webpage", label: "Web" },
               ] as const).map((m) => (
                 <button
                   key={m.key}
@@ -318,6 +320,16 @@ function App() {
                 onTranscriptionError={(err) => { setTranscriptionError(err); setIsTranscribing(false); }}
                 isLoading={isTranscribing}
                 transcriptionModel={selectedTranscriptionModel}
+              />
+            )}
+
+            {/* Modo: Webpage */}
+            {inputMode === "webpage" && (
+              <WebUrlInput
+                onTranscriptionStart={() => { setIsTranscribing(true); setTranscriptionError(null); }}
+                onTranscriptionDone={(text) => { setTranscription(text); setPastedText(""); setIsTranscribing(false); setCanResume(false); setContentTab("transcription"); }}
+                onTranscriptionError={(err) => { setTranscriptionError(err); setIsTranscribing(false); }}
+                isLoading={isTranscribing}
               />
             )}
 

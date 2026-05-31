@@ -4,4 +4,5 @@ pub mod save_files;
 pub mod settings;
 pub mod summarize;
 pub mod transcribe;
+pub mod webpage;
 pub mod youtube;
